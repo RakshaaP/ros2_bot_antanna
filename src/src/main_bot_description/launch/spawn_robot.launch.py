@@ -1,0 +1,66 @@
+import os
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
+import xacro
+
+def generate_launch_description():
+
+    # Get the path to the xacro file
+    xacro_file = os.path.join(get_package_share_directory('main_bot_description'), 'urdf', 'main_bot_description.urdf.xacro')
+
+    # Process the xacro file
+    robot_description_raw = xacro.process_file(xacro_file).toxml()
+
+    # Get the path to the world file
+    world_file = os.path.join(get_package_share_directory('main_bot_description'), 'worlds', 'obstacle.world')
+
+    # Gazebo launch file
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(get_package_share_directory('gazebo_ros'), 'launch'),
+            '/gazebo.launch.py'
+        ]),
+        launch_arguments={'world': world_file}.items()
+    )
+
+    # Spawn entity node
+    spawn_entity = Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-topic', 'robot_description', '-entity', 'main_bot', '-x', '-2.0'],
+        output='screen'
+    )
+    
+    # Robot state publisher
+    node_robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': robot_description_raw}]
+    )
+
+    # Spawn the controllers
+    spawn_controllers = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "antenna_controller", "diff_drive_controller"],
+        output="screen",
+    )
+
+    # Spawn our antenna controller node
+    antenna_controller_node = Node(
+        package='main_bot_description',
+        executable='antenna_controller.py',
+        output='screen',
+    )
+
+    return LaunchDescription([
+        gazebo,
+        node_robot_state_publisher,
+        spawn_entity,
+        spawn_controllers,
+        antenna_controller_node
+    ])
