@@ -21,7 +21,10 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[{'robot_description': robot_description_raw}]
+        parameters=[{'robot_description': robot_description_raw}],
+        remappings=[
+            ("joint_states", "/joint_states"),
+        ]
     )
 
     node_joint_state_publisher_gui = Node(

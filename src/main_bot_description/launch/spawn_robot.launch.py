@@ -53,14 +53,14 @@ def generate_launch_description():
     # Spawn our antenna controller node
     antenna_controller_node = Node(
         package='main_bot_description',
-        executable='antenna_controller.py',
+        executable='antenna_controller',
         output='screen',
     )
 
     # Spawn our line of sight controller node
     line_of_sight_controller_node = Node(
         package='main_bot_description',
-        executable='line_of_sight_controller.py',
+        executable='line_of_sight_controller',
         output='screen',
     )
 
