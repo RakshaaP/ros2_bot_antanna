@@ -19,6 +19,32 @@
         <visual name="visual">
           <geometry><cylinder><radius>0.2</radius><length>5.0</length></cylinder></geometry>
         </visual>
+        <sensor type="ray" name="tower_ray_sensor">
+          <pose>0 0 2.5 0 0 0</pose>
+          <visualize>true</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1</resolution>
+                <min_angle>-3.14159</min_angle>
+                <max_angle>3.14159</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>30.0</max>
+              <resolution>0.01</resolution>
+            </range>
+          </ray>
+          <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+              <ros>
+                <namespace>/tower</namespace>
+                <remapping>~/out:=scan</remapping>
+              </ros>
+          </plugin>
+        </sensor>
       </link>
     </model>
 

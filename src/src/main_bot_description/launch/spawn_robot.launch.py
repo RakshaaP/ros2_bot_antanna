@@ -57,10 +57,18 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Spawn our line of sight controller node
+    line_of_sight_controller_node = Node(
+        package='main_bot_description',
+        executable='line_of_sight_controller.py',
+        output='screen',
+    )
+
     return LaunchDescription([
         gazebo,
         node_robot_state_publisher,
         spawn_entity,
         spawn_controllers,
-        antenna_controller_node
+        antenna_controller_node,
+        line_of_sight_controller_node
     ])

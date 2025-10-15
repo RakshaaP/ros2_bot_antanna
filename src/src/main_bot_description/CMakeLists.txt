@@ -44,11 +44,7 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-ament_package()
+ament_python_install_package(${PROJECT_NAME})
 
-install(PROGRAMS
-  src/antenna_controller.py
-  src/lidar_test.py
-  DESTINATION lib/${PROJECT_NAME}
-)
+ament_package()
 
