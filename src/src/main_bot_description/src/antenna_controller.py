@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
@@ -11,7 +10,7 @@ class AntennaController(Node):
         super().__init__('antenna_controller')
         self.subscription = self.create_subscription(
             LaserScan,
-            '/gazebo_ros_lidar_controller/out',
+            '/demo/scan',
             self.listener_callback,
             10)
         self.publisher_ = self.create_publisher(JointTrajectory, '/antenna_controller/joint_trajectory', 10)
@@ -23,7 +22,7 @@ class AntennaController(Node):
 
         # Check if there are any obstacles in the front arc.
         # We filter out any 'inf' values.
-        valid_ranges = [r for r in front_arc if r > 0.1 and r < 2.5] # Look for obstacles within 2.5 meters
+        valid_ranges = [r for r in front_arc if r > 0.1 and r < 1.0] # Look for obstacles within 1 meter
 
         if not valid_ranges:
             # No obstacles, move to default position (0.0)
@@ -31,13 +30,15 @@ class AntennaController(Node):
             self.get_logger().info('No obstacles, moving to default position.')
             return
 
-        # For simplicity, we'll just react to the closest obstacle.a
+        # For simplicity, we'll just react to the closest obstacle.
         # A more advanced approach would be to calculate the actual height needed.
         closest_obstacle = min(valid_ranges)
         self.get_logger().info(f'Closest obstacle at: {closest_obstacle:.2f}m')
 
-        # New linear mapping: 0.1m distance -> 0.5m height, 2.5m distance -> 0.0m height
-        desired_height = 0.5 * (1.0 - (closest_obstacle - 0.1) / (2.5 - 0.1))
+        # Simple proportional control: the closer the obstacle, the higher the antenna.
+        # This is a placeholder for a more sophisticated height calculation.
+        # If obstacle is at 1m, height is 0. If at 0.1m, height is 0.5.
+        desired_height = 0.5 * (1.0 - (closest_obstacle - 0.1) / 0.9)
         desired_height = max(0.0, min(0.5, desired_height)) # Clamp between 0.0 and 0.5
 
         self.move_antenna(desired_height)

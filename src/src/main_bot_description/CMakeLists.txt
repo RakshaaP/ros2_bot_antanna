@@ -7,7 +7,6 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(ros2_controllers REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -40,15 +39,14 @@ install(
 )
 
 install(
-  DIRECTORY launch rviz config urdf worlds
-  DESTINATION share/${PROJECT_NAME}
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 ament_package()
 
 install(PROGRAMS
   src/antenna_controller.py
-  src/lidar_test.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

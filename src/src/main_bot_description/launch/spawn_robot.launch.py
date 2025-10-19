@@ -14,23 +14,19 @@ def generate_launch_description():
     # Process the xacro file
     robot_description_raw = xacro.process_file(xacro_file).toxml()
 
-    # Get the path to the world file
-    world_file = os.path.join(get_package_share_directory('main_bot_description'), 'worlds', 'obstacle.world')
-
     # Gazebo launch file
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             os.path.join(get_package_share_directory('gazebo_ros'), 'launch'),
             '/gazebo.launch.py'
-        ]),
-        launch_arguments={'world': world_file}.items()
+        ])
     )
 
     # Spawn entity node
     spawn_entity = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
-        arguments=['-topic', 'robot_description', '-entity', 'main_bot', '-x', '-2.0'],
+        arguments=['-topic', 'robot_description', '-entity', 'main_bot'],
         output='screen'
     )
     
@@ -46,7 +42,7 @@ def generate_launch_description():
     spawn_controllers = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_state_broadcaster", "antenna_controller", "diff_drive_controller"],
+        arguments=["joint_state_broadcaster", "antenna_controller"],
         output="screen",
     )
 

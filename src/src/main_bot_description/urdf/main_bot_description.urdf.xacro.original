@@ -11,9 +11,9 @@
   <xacro:property name="base_mass" value="5.0"/>
 
   <material name="grey">
-    <color rgba="0.5 0.5 0.5 1.0"/>
+   <color rgba="0.5 0.5 0.5 1.0"/>
   </material>
-
+  
   <!-- Base Link -->
   <link name="base_link">
     <visual>

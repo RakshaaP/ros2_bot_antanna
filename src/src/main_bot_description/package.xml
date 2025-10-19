@@ -17,7 +17,6 @@
   <depend>trajectory_msgs</depend>
   <depend>joint_state_publisher_gui</depend>
   <depend>rviz2</depend>
-  <depend>ros2_controllers</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
